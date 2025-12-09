@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Бронирование — SkillMarkets{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>📅 Бронирование: {{ offer.title }}</h2>
+    <p><strong>Репетитор:</strong> {{ offer.tutor.username }}</p>
+    <p><strong>Цена:</strong> ${{ offer.price_per_hour }} / час</p>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.start_time.label }}
+            {{ form.start_time() }}
+        </p>
+        <p>
+            {{ form.duration_hours.label }}
+            {{ form.duration_hours(placeholder="1.5") }}
+            <small style="color:#666;">Минимум 0.5 часа, максимум 10</small>
+        </p>
+        <p>
+            <button type="submit" class="btn">Забронировать</button>
+        </p>
+    </form>
+    <a href="{{ url_for('main.view_offer', offer_id=offer.id) }}" style="display:inline-block; margin-top:15px;">← Назад</a>
+</div>
+{% endblock %}

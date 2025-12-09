@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Найди идеального репетитора</h2>
+
+{% if current_user.is_authenticated and current_user.is_tutor %}
+    <a href="{{ url_for('main.new_offer') }}" class="btn" style="display: inline-block; margin: 15px 0;">➕ Добавить услугу</a>
+{% endif %}
+
+{% if tutors %}
+    {% for tutor in tutors %}
+    <div class="card">
+        <h3>{{ tutor.username }}</h3>
+        <p><strong>Предметы:</strong> {{ tutor.subjects or "Не указаны" }}</p>
+        <p>{{ tutor.bio or "Биография не заполнена" }}</p>
+        
+        {% if tutor.offers %}
+            <h4>Доступные услуги:</h4>
+            {% for offer in tutor.offers %}
+            <div style="background:#f1f5ff; padding:15px; border-radius:8px; margin-top:10px;">
+                <h4>{{ offer.title }} — ${{ offer.price_per_hour }}/час</h4>
+                <p><strong>Предмет:</strong> {{ offer.subject }}</p>
+                <p>{{ offer.description[:120] }}{% if offer.description|length > 120 %}...{% endif %}</p>
+                <a href="{{ url_for('main.view_offer', offer_id=offer.id) }}" class="btn btn-outline">Подробнее</a>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="card">
+        <p>Пока нет репетиторов. <a href="{{ url_for('auth.register') }}">Станьте первым!</a></p>
+    </div>
+{% endif %}
+{% endblock %}

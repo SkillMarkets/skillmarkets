@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Регистрация — SkillMarkets{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>Создать аккаунт</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.username.label }}
+            {{ form.username(placeholder="ivan_2025") }}
+        </p>
+        <p>
+            {{ form.email.label }}
+            {{ form.email(placeholder="ivan@example.com") }}
+        </p>
+        <p>
+            {{ form.password.label }}
+            {{ form.password(placeholder="••••••••") }}
+        </p>
+        <p>
+            {{ form.confirm_password.label }}
+            {{ form.confirm_password(placeholder="••••••••") }}
+        </p>
+        <p>
+            {{ form.is_tutor() }} {{ form.is_tutor.label }}
+        </p>
+        <p>
+            <button type="submit" class="btn">Зарегистрироваться</button>
+        </p>
+    </form>
+    <p style="margin-top: 20px;">
+        Уже есть аккаунт? <a href="{{ url_for('auth.login') }}" class="btn btn-outline" style="padding:6px 12px;">Войти</a>
+    </p>
+</div>
+{% endblock %}

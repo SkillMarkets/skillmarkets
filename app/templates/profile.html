@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>Мой профиль</h2>
+    <p><strong>Имя:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Роль:</strong> {% if user.is_tutor %}Репетитор{% else %}Студент{% endif %}</p>
+
+    {% if user.is_tutor and user.average_rating > 0 %}
+        <p><strong>Рейтинг:</strong> ⭐ {{ user.average_rating }} ({{ user.reviews_received|length }} отзывов)</p>
+    {% endif %}
+
+    {% if user.is_tutor %}
+        <a href="{{ url_for('main.new_offer') }}" class="btn" style="margin:15px 0;">➕ Добавить услугу</a>
+        {% if user.offers %}
+            <h3>Ваши услуги</h3>
+            {% for offer in user.offers %}
+            <div style="background:#f8f9fa; padding:12px; border-radius:8px; margin:10px 0;">
+                <strong>{{ offer.title }}</strong> — ${{ offer.price_per_hour }}/час<br>
+                {{ offer.subject }}
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+
+    <h3>История бронирований</h3>
+    {% set bookings = user.bookings_as_student if not user.is_tutor else user.bookings_as_tutor %}
+    {% if bookings %}
+        {% for b in bookings %}
+        <div style="border-left: 4px solid var(--primary); padding-left: 15px; margin: 15px 0;">
+            {% if user.is_tutor %}
+                <p><strong>Студент:</strong> {{ b.student.username }}</p>
+            {% else %}
+                <p><strong>Репетитор:</strong> {{ b.tutor.username }}</p>
+            {% endif %}
+            <p><strong>Услуга:</strong> {{ b.offer.title }}</p>
+            <p><strong>Время:</strong> {{ b.start_time.strftime('%d.%m %H:%M') }} — {{ b.end_time.strftime('%H:%M') }}</p>
+            <p><strong>Статус:</strong> {{ b.status }}</p>
+            
+            {% if not user.is_tutor and b.status == 'pending' %}
+                <a href="{{ url_for('main.pay_booking', booking_id=b.id) }}" class="btn">💳 Оплатить</a>
+            {% elif not user.is_tutor and b.status == 'completed' %}
+                {% if not (b.id in [r.booking_id for r in current_user.reviews_given]) %}
+                    <a href="{{ url_for('main.leave_review', booking_id=b.id) }}" class="btn btn-outline">⭐ Оставить отзыв</a>
+                {% endif %}
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>У вас пока нет бронирований.</p>
+    {% endif %}
+</div>
+{% endblock %}

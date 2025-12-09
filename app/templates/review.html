@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Оставить отзыв — SkillMarkets{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>⭐ Оставить отзыв</h2>
+    <p><strong>Репетитор:</strong> {{ booking.tutor.username }}</p>
+    <p><strong>Услуга:</strong> {{ booking.offer.title }}</p>
+
+    <form method="POST">
+        <label for="rating">Ваша оценка:</label>
+        <select name="rating" id="rating" class="btn" style="width:auto; padding:8px 15px; background:white; color:var(--dark); border:1px solid var(--primary);">
+            <option value="5">5 — Отлично</option>
+            <option value="4">4 — Хорошо</option>
+            <option value="3">3 — Удовлетворительно</option>
+            <option value="2">2 — Плохо</option>
+            <option value="1">1 — Ужасно</option>
+        </select>
+
+        <label for="comment" style="margin-top:15px;">Комментарий (необязательно):</label>
+        <textarea name="comment" id="comment" rows="4" placeholder="Расскажите, что вам понравилось..."></textarea>
+
+        <button type="submit" class="btn" style="margin-top:20px;">Отправить отзыв</button>
+    </form>
+    <a href="{{ url_for('main.profile') }}" style="display:inline-block; margin-top:15px;">← Отмена</a>
+</div>
+{% endblock %}

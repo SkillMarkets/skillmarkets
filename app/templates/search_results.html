@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Поиск: {{ query }} — SkillMarkets{% endblock %}
+{% block content %}
+<h2>Результаты поиска: "{{ query }}"</h2>
+
+{% if offers %}
+    {% for offer in offers %}
+    <div class="card">
+        <h3>{{ offer.title }} — ${{ offer.price_per_hour }}/час</h3>
+        <p><strong>Предмет:</strong> {{ offer.subject }}</p>
+        <p><strong>Репетитор:</strong> {{ offer.tutor.username }}</p>
+        <p>{{ offer.description[:180] }}{% if offer.description|length > 180 %}...{% endif %}</p>
+        <a href="{{ url_for('main.view_offer', offer_id=offer.id) }}" class="btn btn-outline">Подробнее</a>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="card">
+        <p>По запросу "<strong>{{ query }}</strong>" ничего не найдено.</p>
+        <a href="{{ url_for('main.index') }}" class="btn" style="margin-top:10px;">← Вернуться на главную</a>
+    </div>
+{% endif %}
+{% endblock %}

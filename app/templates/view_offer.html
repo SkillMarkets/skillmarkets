@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>{{ offer.title }}</h2>
+    <p><strong>Предмет:</strong> {{ offer.subject }}</p>
+    <p><strong>Цена:</strong> ${{ offer.price_per_hour }} / час</p>
+    <p><strong>Репетитор:</strong> {{ offer.tutor.username }}</p>
+    
+    <h3>Описание</h3>
+    <p>{{ offer.description }}</p>
+    
+    {% if current_user.is_authenticated %}
+        {% if not current_user.is_tutor and current_user.id != offer.tutor.id %}
+            <div style="margin-top:20px;">
+                <a href="{{ url_for('main.chat', user_id=offer.tutor.id) }}" class="btn" style="margin-right:10px;">💬 Написать</a>
+                <a href="{{ url_for('main.book_tutor', offer_id=offer.id) }}" class="btn">📅 Забронировать</a>
+            </div>
+        {% elif current_user.id == offer.tutor.id %}
+            <p><em>Это ваша услуга.</em></p>
+        {% endif %}
+    {% else %}
+        <p><a href="{{ url_for('auth.login') }}" class="btn btn-outline">Войдите</a>, чтобы связаться с репетитором</p>
+    {% endif %}
+</div>
+
+<a href="{{ url_for('main.index') }}">← Назад к списку</a>
+{% endblock %}

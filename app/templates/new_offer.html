@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Добавить услугу — SkillMarkets{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>➕ Добавить услугу репетитора</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.title.label }}
+            {{ form.title(placeholder="Репетитор по математике для ЕГЭ") }}
+        </p>
+        <p>
+            {{ form.subject.label }}
+            {{ form.subject(placeholder="Math, Physics, Programming") }}
+            <small style="color:#666;">Укажите предметы через запятую</small>
+        </p>
+        <p>
+            {{ form.price_per_hour.label }}
+            {{ form.price_per_hour(placeholder="25") }}
+            <small style="color:#666;">Цена в долларах США за час</small>
+        </p>
+        <p>
+            {{ form.description.label }}
+            {{ form.description(rows=5, placeholder="Опишите, чем вы можете помочь студентам...") }}
+        </p>
+        <p>
+            <button type="submit" class="btn">Опубликовать услугу</button>
+        </p>
+    </form>
+    <a href="{{ url_for('main.index') }}" style="display:inline-block; margin-top:15px;">← Назад к списку</a>
+</div>
+{% endblock %}

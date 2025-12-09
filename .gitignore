@@ -1,0 +1,30 @@
+# Виртуальное окружение
+venv/
+env/
+.venv/
+
+# Секреты
+.env
+
+# Кэш Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.ipynb_checkpoints
+
+# База данных (если вдруг локальная SQLite)
+instance/
+*.db
+*.sqlite
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ОС
+.DS_Store
+Thumbs.db
