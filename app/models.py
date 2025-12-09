@@ -55,6 +55,7 @@ class Booking(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(20), default='pending')  # pending, confirmed, completed, cancelled
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    offer = db.relationship('TutoringOffer', backref='bookings', lazy=True)
 
 
 class Message(db.Model):

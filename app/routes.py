@@ -169,7 +169,6 @@ def leave_review(booking_id):
     if request.method == 'POST':
         rating = int(request.form['rating'])
         comment = request.form.get('comment', '')
-        # Проверка: отзыв уже есть?
         existing = Review.query.filter_by(reviewer_id=current_user.id, booking_id=booking_id).first()
         if existing:
             flash("Вы уже оставили отзыв.", "warning")
@@ -187,6 +186,55 @@ def leave_review(booking_id):
         return redirect(url_for('main.profile'))
 
     return render_template('review.html', booking=booking)
+
+# --- УПРАВЛЕНИЕ БРОНИРОВАНИЕМ (РЕПЕТИТОР) ---
+@main.route('/confirm/<int:booking_id>')
+@login_required
+def confirm_booking(booking_id):
+    booking = Booking.query.get_or_404(booking_id)
+    if booking.tutor_id != current_user.id:
+        flash("Вы не можете подтверждать чужие бронирования.", "danger")
+        return redirect(url_for('main.profile'))
+    if booking.status != 'pending':
+        flash("Это бронирование уже обработано.", "warning")
+        return redirect(url_for('main.profile'))
+    
+    booking.status = 'confirmed'
+    db.session.commit()
+    flash("Бронирование подтверждено!", "success")
+    return redirect(url_for('main.profile'))
+
+@main.route('/cancel/<int:booking_id>')
+@login_required
+def cancel_booking(booking_id):
+    booking = Booking.query.get_or_404(booking_id)
+    if booking.tutor_id != current_user.id:
+        flash("Вы не можете отменять чужие бронирования.", "danger")
+        return redirect(url_for('main.profile'))
+    if booking.status != 'pending':
+        flash("Это бронирование уже обработано.", "warning")
+        return redirect(url_for('main.profile'))
+    
+    booking.status = 'cancelled'
+    db.session.commit()
+    flash("Бронирование отменено.", "info")
+    return redirect(url_for('main.profile'))
+
+@main.route('/complete/<int:booking_id>')
+@login_required
+def complete_booking(booking_id):
+    booking = Booking.query.get_or_404(booking_id)
+    if booking.tutor_id != current_user.id:
+        flash("Вы не можете завершать чужие бронирования.", "danger")
+        return redirect(url_for('main.profile'))
+    if booking.status != 'confirmed':
+        flash("Можно завершить только подтверждённые бронирования.", "warning")
+        return redirect(url_for('main.profile'))
+    
+    booking.status = 'completed'
+    db.session.commit()
+    flash("Занятие завершено! Студент может оставить отзыв.", "success")
+    return redirect(url_for('main.profile'))
 
 # --- АУТЕНТИФИКАЦИЯ ---
 @auth.route('/login', methods=['GET', 'POST'])
